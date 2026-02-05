@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alone - A Visual Poem</title>
+    <title>Alone - Night Sky Poem</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
         
         body {
             font-family: 'Georgia', serif;
-            background: linear-gradient(135deg, #0a1a2d 0%, #1a3a5f 50%, #0c2d4d 100%);
+            background: linear-gradient(to bottom, #0a0f2b, #1a1f40, #0c1129);
             color: #e8f4f8;
             min-height: 100vh;
             display: flex;
@@ -23,21 +23,85 @@
             padding: 2rem;
             line-height: 1.6;
             overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Animated starfield background */
+        .night-sky {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 5s infinite;
+        }
+        
+        /* Create stars of different sizes */
+        .star.small {
+            width: 1px;
+            height: 1px;
+        }
+        
+        .star.medium {
+            width: 2px;
+            height: 2px;
+        }
+        
+        .star.large {
+            width: 3px;
+            height: 3px;
+        }
+        
+        /* Shooting stars */
+        .shooting-star {
+            position: absolute;
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 70%, rgba(255,255,255,0) 100%);
+            transform: rotate(-45deg);
+            opacity: 0;
+        }
+        
+        .moon {
+            position: fixed;
+            top: 10%;
+            right: 10%;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle at 70% 30%, #f9f3d5, #e8e0b5);
+            border-radius: 50%;
+            box-shadow: 0 0 40px rgba(249, 243, 213, 0.6);
+            z-index: -1;
+            opacity: 0.9;
+        }
+        
+        .moon-crater {
+            position: absolute;
+            background-color: rgba(200, 190, 160, 0.4);
+            border-radius: 50%;
         }
         
         .container {
             max-width: 800px;
             width: 100%;
-            background-color: rgba(10, 26, 45, 0.7);
+            background-color: rgba(10, 15, 40, 0.7);
             border-radius: 20px;
             padding: 3rem;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(5px);
         }
         
-        /* Background texture for depth */
+        /* Container night sky effect */
         .container::before {
             content: "";
             position: absolute;
@@ -45,33 +109,42 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: 
-                radial-gradient(circle at 15% 50%, rgba(41, 128, 185, 0.1) 0%, transparent 20%),
-                radial-gradient(circle at 85% 30%, rgba(26, 188, 156, 0.05) 0%, transparent 20%),
-                radial-gradient(circle at 50% 80%, rgba(231, 76, 60, 0.03) 0%, transparent 20%);
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(41, 128, 185, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(142, 68, 173, 0.1) 0%, transparent 50%);
             z-index: -1;
         }
         
         .title {
             text-align: center;
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             margin-bottom: 3rem;
             color: #f7f7f7;
-            text-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+            text-shadow: 0 0 15px rgba(52, 152, 219, 0.7);
             font-weight: 300;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             position: relative;
+            font-family: 'Times New Roman', serif;
+        }
+        
+        .title::before {
+            content: "✧";
+            position: absolute;
+            left: 15%;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #f1c40f;
+            font-size: 1.5rem;
         }
         
         .title::after {
-            content: "";
+            content: "✧";
             position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 150px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #3498db, transparent);
+            right: 15%;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #f1c40f;
+            font-size: 1.5rem;
         }
         
         .poem {
@@ -89,31 +162,64 @@
             transition: all 0.5s ease;
         }
         
-        /* First stanza - introspective */
+        /* First stanza - introspective night thoughts */
         .stanza:nth-child(1) {
-            background-color: rgba(22, 42, 65, 0.4);
+            background-color: rgba(22, 27, 60, 0.4);
             border-left: 3px solid #3498db;
             text-align: left;
             padding-left: 2.5rem;
+            box-shadow: 0 5px 15px rgba(0, 10, 30, 0.5);
         }
         
-        /* Second stanza - realization */
+        .stanza:nth-child(1)::before {
+            content: "✦";
+            position: absolute;
+            left: 0.8rem;
+            top: 1.5rem;
+            color: #3498db;
+            font-size: 1.2rem;
+        }
+        
+        /* Second stanza - realization under stars */
         .stanza:nth-child(2) {
-            background-color: rgba(41, 128, 185, 0.15);
-            border-right: 3px solid #1abc9c;
+            background-color: rgba(41, 58, 128, 0.15);
+            border-right: 3px solid #9b59b6;
             text-align: right;
             padding-right: 2.5rem;
+            box-shadow: 0 5px 15px rgba(30, 0, 50, 0.4);
         }
         
-        /* Third stanza - conclusion */
+        .stanza:nth-child(2)::after {
+            content: "✦";
+            position: absolute;
+            right: 0.8rem;
+            top: 1.5rem;
+            color: #9b59b6;
+            font-size: 1.2rem;
+        }
+        
+        /* Third stanza - conclusion with moonlight */
         .stanza:nth-child(3) {
-            background-color: rgba(192, 57, 43, 0.1);
+            background-color: rgba(60, 30, 70, 0.2);
             text-align: center;
             font-size: 1.4rem;
             font-weight: bold;
             padding: 2rem;
             margin-top: 3rem;
-            border: 1px solid rgba(231, 76, 60, 0.3);
+            border: 1px solid rgba(155, 89, 182, 0.4);
+            box-shadow: 0 0 20px rgba(155, 89, 182, 0.3);
+            position: relative;
+        }
+        
+        .stanza:nth-child(3)::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 20px;
+            background: radial-gradient(ellipse, rgba(155, 89, 182, 0.5), transparent 70%);
         }
         
         .line {
@@ -145,65 +251,88 @@
         .line:nth-child(12) {
             font-weight: bold;
             color: #f1c40f;
-            text-shadow: 0 0 5px rgba(241, 196, 15, 0.5);
+            text-shadow: 0 0 8px rgba(241, 196, 15, 0.7);
         }
         
-        /* Water and bread imagery */
+        /* Water and bread imagery with night theme */
         .water {
-            color: #3498db;
+            color: #5dade2;
             font-style: italic;
-            text-shadow: 0 0 8px rgba(52, 152, 219, 0.7);
+            text-shadow: 0 0 10px rgba(93, 173, 226, 0.8);
+            position: relative;
+        }
+        
+        .water::after {
+            content: "☾";
+            position: absolute;
+            right: -20px;
+            color: #5dade2;
+            font-size: 0.9rem;
         }
         
         .bread {
-            color: #e67e22;
+            color: #f8c471;
             font-style: italic;
-            text-shadow: 0 0 8px rgba(230, 126, 34, 0.5);
+            text-shadow: 0 0 10px rgba(248, 196, 113, 0.6);
+            position: relative;
+        }
+        
+        .bread::before {
+            content: "☾";
+            position: absolute;
+            left: -20px;
+            color: #f8c471;
+            font-size: 0.9rem;
         }
         
         /* Isolation effect for "alone" */
         .alone {
             display: inline-block;
-            animation: pulse 3s infinite;
+            animation: pulse 3s infinite, glow 4s infinite alternate;
             color: #e74c3c;
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
+            position: relative;
+            padding: 0 5px;
         }
         
-        /* Decorative elements */
-        .decoration {
+        .alone::after {
+            content: "";
             position: absolute;
-            opacity: 0.1;
-            z-index: 0;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #e74c3c, transparent);
         }
         
-        .circle-1 {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: radial-gradient(circle, #3498db, transparent);
-            top: 10%;
-            left: 5%;
-        }
-        
-        .circle-2 {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: radial-gradient(circle, #e74c3c, transparent);
-            bottom: 20%;
-            right: 10%;
+        /* Constellations between stanzas */
+        .constellation {
+            text-align: center;
+            margin: 2rem 0;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 10px;
+            font-size: 1.5rem;
         }
         
         .quote {
             font-style: italic;
-            color: #95a5a6;
+            color: #aeb6bf;
             margin-top: 3rem;
             text-align: center;
             font-size: 1rem;
             padding-top: 1.5rem;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        
+        .quote::before {
+            content: "☾ ☾ ☾";
+            display: block;
+            margin-bottom: 10px;
+            letter-spacing: 10px;
+            color: #5dade2;
         }
         
         /* Animations */
@@ -215,6 +344,28 @@
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes shootingStar {
+            0% {
+                transform: translateX(0) translateY(0) rotate(-45deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(500px) translateY(500px) rotate(-45deg);
+                opacity: 0;
             }
         }
         
@@ -233,6 +384,24 @@
             }
         }
         
+        @keyframes glow {
+            0% {
+                color: #e74c3c;
+            }
+            100% {
+                color: #f1948a;
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .container {
@@ -241,6 +410,11 @@
             
             .title {
                 font-size: 2rem;
+            }
+            
+            .title::before,
+            .title::after {
+                display: none;
             }
             
             .poem {
@@ -258,21 +432,46 @@
                 text-align: center;
                 border-left: none;
                 border-right: none;
-                border-top: 3px solid #3498db;
-                border-bottom: 3px solid #3498db;
+                border-top: 2px solid #3498db;
+                border-bottom: 2px solid #3498db;
+            }
+            
+            .stanza:nth-child(1)::before,
+            .stanza:nth-child(2)::after {
+                display: none;
+            }
+            
+            .moon {
+                width: 80px;
+                height: 80px;
+                top: 5%;
+                right: 5%;
             }
         }
         
         /* Hover effects */
         .stanza:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+        
+        .line:hover {
+            transform: translateX(5px);
+            transition: transform 0.3s ease;
         }
     </style>
 </head>
 <body>
-    <div class="decoration circle-1"></div>
-    <div class="decoration circle-2"></div>
+    <!-- Moon with craters -->
+    <div class="moon">
+        <div class="moon-crater" style="width: 20px; height: 20px; top: 30px; left: 40px;"></div>
+        <div class="moon-crater" style="width: 15px; height: 15px; top: 60px; left: 70px;"></div>
+        <div class="moon-crater" style="width: 25px; height: 25px; top: 40px; left: 20px;"></div>
+        <div class="moon-crater" style="width: 10px; height: 10px; top: 80px; left: 50px;"></div>
+    </div>
+    
+    <!-- Animated starfield -->
+    <div class="night-sky" id="nightSky"></div>
     
     <div class="container">
         <h1 class="title">Alone</h1>
@@ -286,6 +485,8 @@
                 <div class="line">And <span class="bread">bread loaf</span> is not stone</div>
             </div>
             
+            <div class="constellation">✦ ✦ ✦ ✦</div>
+            
             <div class="stanza">
                 <div class="line">I came up with one thing</div>
                 <div class="line">And I don't believe I'm wrong</div>
@@ -293,6 +494,8 @@
                 <div class="line">But nobody</div>
                 <div class="line">Can make it out here alone.</div>
             </div>
+            
+            <div class="constellation">✦ ✦ ✦ ✦</div>
             
             <div class="stanza">
                 <div class="line"><span class="alone">Alone</span>, all <span class="alone">alone</span></div>
@@ -302,30 +505,89 @@
         </div>
         
         <div class="quote">
-            CSS interpretation of a poem about human connection and solitude
+            Under the night sky, we find our shared humanity
         </div>
     </div>
     
     <script>
-        // Add a subtle interactivity to the poem lines
+        // Create animated starfield
+        const nightSky = document.getElementById('nightSky');
+        const starCount = 200;
+        
+        for (let i = 0; i < starCount; i++) {
+            const star = document.createElement('div');
+            const starSize = Math.random();
+            
+            if (starSize < 0.7) {
+                star.className = 'star small';
+            } else if (starSize < 0.9) {
+                star.className = 'star medium';
+            } else {
+                star.className = 'star large';
+            }
+            
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.animationDelay = `${Math.random() * 5}s`;
+            
+            nightSky.appendChild(star);
+        }
+        
+        // Create occasional shooting stars
+        function createShootingStar() {
+            const shootingStar = document.createElement('div');
+            shootingStar.className = 'shooting-star';
+            shootingStar.style.left = `${Math.random() * 50}%`;
+            shootingStar.style.top = `${Math.random() * 50}%`;
+            shootingStar.style.animation = `shootingStar 3s linear`;
+            
+            nightSky.appendChild(shootingStar);
+            
+            // Remove after animation completes
+            setTimeout(() => {
+                if (shootingStar.parentNode) {
+                    shootingStar.parentNode.removeChild(shootingStar);
+                }
+            }, 3000);
+        }
+        
+        // Create shooting stars at intervals
+        setInterval(createShootingStar, 8000);
+        // Create initial shooting stars
+        setTimeout(createShootingStar, 1000);
+        setTimeout(createShootingStar, 4000);
+        
+        // Add interactivity to poem lines
         document.querySelectorAll('.line').forEach(line => {
             line.addEventListener('mouseenter', function() {
-                this.style.transform = 'scale(1.02)';
-                this.style.transition = 'transform 0.3s ease';
+                this.style.transform = 'translateX(5px)';
+                this.style.transition = 'transform 0.3s ease, color 0.3s ease';
+                
+                // Add a subtle glow effect
+                this.style.textShadow = '0 0 8px rgba(255, 255, 255, 0.5)';
             });
             
             line.addEventListener('mouseleave', function() {
-                this.style.transform = 'scale(1)';
+                this.style.transform = 'translateX(0)';
+                this.style.textShadow = '';
             });
         });
         
-        // Animate the circles on load
+        // Make the moon gently float
+        const moon = document.querySelector('.moon');
+        moon.style.animation = 'float 8s ease-in-out infinite';
+        
+        // Animate the container entrance
         document.addEventListener('DOMContentLoaded', function() {
-            const circles = document.querySelectorAll('.decoration');
-            circles.forEach((circle, index) => {
-                circle.style.animation = `fadeIn 2s ${index * 0.5}s forwards`;
-                circle.style.opacity = '0';
-            });
+            const container = document.querySelector('.container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                container.style.transition = 'opacity 1.5s ease, transform 1.5s ease';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 500);
         });
     </script>
 </body>
